@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr" itemscope itemtype="http://schema.org/Article" data-r-output-format="html">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta name="generator" content="Hugo 0.148.1">
+    <meta name="generator" content="Relearn 8.0.0+9803d5122ebb3276acea823f476e9eb44f607862">
+    <meta name="description" content="Have you ever set up Defender policies from GPO or Intune, and wondered whether the policies is indeed applied or not? Or maybe you are using MDE, and is seeing Security Recommendation to Enable Defender ASR Rules, you have applied it through GPO/Intune, but the Recommendation won’t go away?
+This guide will be focused at explaining Defender logs called MpRegistry.txt, that will show you how Defender is receiving the policy, and applied policy. This guiide will help you troubleshoot the following scenarios:">
+    <meta name="author" content="">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Tracking Defender Policy Deployment with Logs :: Novian Andrian">
+    <meta name="twitter:description" content="Have you ever set up Defender policies from GPO or Intune, and wondered whether the policies is indeed applied or not? Or maybe you are using MDE, and is seeing Security Recommendation to Enable Defender ASR Rules, you have applied it through GPO/Intune, but the Recommendation won’t go away?
+This guide will be focused at explaining Defender logs called MpRegistry.txt, that will show you how Defender is receiving the policy, and applied policy. This guiide will help you troubleshoot the following scenarios:">
+    <meta property="og:url" content="http://localhost:1313/blog/defender/001.mpregistry/001.mpregistry/index.html">
+    <meta property="og:site_name" content="Novian Andrian">
+    <meta property="og:title" content="Tracking Defender Policy Deployment with Logs :: Novian Andrian">
+    <meta property="og:description" content="Have you ever set up Defender policies from GPO or Intune, and wondered whether the policies is indeed applied or not? Or maybe you are using MDE, and is seeing Security Recommendation to Enable Defender ASR Rules, you have applied it through GPO/Intune, but the Recommendation won’t go away?
+This guide will be focused at explaining Defender logs called MpRegistry.txt, that will show you how Defender is receiving the policy, and applied policy. This guiide will help you troubleshoot the following scenarios:">
+    <meta property="og:locale" content="en_us">
+    <meta property="og:type" content="article">
+    <meta property="article:section" content="My Blog Sharing">
+    <meta property="article:tag" content="Defender">
+    <meta property="article:tag" content="Troubleshooting">
+    <meta property="article:tag" content="Mpregistry">
+    <meta itemprop="name" content="Tracking Defender Policy Deployment with Logs :: Novian Andrian">
+    <meta itemprop="description" content="Have you ever set up Defender policies from GPO or Intune, and wondered whether the policies is indeed applied or not? Or maybe you are using MDE, and is seeing Security Recommendation to Enable Defender ASR Rules, you have applied it through GPO/Intune, but the Recommendation won’t go away?
+This guide will be focused at explaining Defender logs called MpRegistry.txt, that will show you how Defender is receiving the policy, and applied policy. This guiide will help you troubleshoot the following scenarios:">
+    <meta itemprop="wordCount" content="246">
+    <meta itemprop="keywords" content="Defender,Troubleshooting,Mpregistry">
+    <title>Tracking Defender Policy Deployment with Logs :: Novian Andrian</title>
+    <link href="/css/auto-complete/auto-complete.min.css?1753722710" rel="stylesheet">
+    <script src="/js/auto-complete/auto-complete.min.js?1753722710" defer></script>
+    <script src="/js/search-lunr.js?1753722710" defer></script>
+    <script src="/js/search.js?1753722710" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.index_js_url="/searchindex.en.js?1753722710";
+    </script>
+    <script src="/js/lunr/lunr.min.js?1753722710" defer></script>
+    <script src="/js/lunr/lunr.stemmer.support.min.js?1753722710" defer></script>
+    <script src="/js/lunr/lunr.multi.min.js?1753722710" defer></script>
+    <script src="/js/lunr/lunr.en.min.js?1753722710" defer></script>
+    <script>
+      window.relearn = window.relearn || {};
+      window.relearn.contentLangs=['en'];
+    </script>
+    <link href="/fonts/fontawesome/css/fontawesome-all.min.css?1753722710" rel="stylesheet" media="print" onload="this.media='all';this.onload=null;"><noscript><link href="/fonts/fontawesome/css/fontawesome-all.min.css?1753722710" rel="stylesheet"></noscript>
+    <link href="/css/perfect-scrollbar/perfect-scrollbar.min.css?1753722710" rel="stylesheet">
+    <link href="/css/theme.css?1753722710" rel="stylesheet">
+    <link href="/css/format-html.css?1753722710" rel="stylesheet" id="R-format-style">
+    <script>
+      window.relearn = window.relearn || {};
+      // configuration
+      window.relearn.min = ``;
+      window.relearn.path='\/blog\/defender\/001.mpregistry\/001.mpregistry\/index.html';
+      window.relearn.relBasePath='..\/..\/..\/..';
+      window.relearn.relBaseUri='..\/..\/..\/..';
+      window.relearn.absBaseUri='http:\/\/localhost:1313';
+      window.relearn.disableAnchorCopy=false;
+      window.relearn.disableAnchorScrolling=false;
+      window.relearn.disableInlineCopyToClipboard=false;
+      window.relearn.enableBlockCodeWrap=true;
+      // legal
+      window.relearn.getItem = (s,n) => {return s.getItem(n)};
+      window.relearn.setItem = (s,n,v) => {return s.setItem(n,v)};
+      window.relearn.removeItem = (s,n) => {return s.removeItem(n)};
+      // translations
+      window.T_Copy_to_clipboard = `Copy to clipboard`;
+      window.T_Copied_to_clipboard = `Copied to clipboard!`;
+      window.T_Copy_link_to_clipboard = `Copy link to clipboard`;
+      window.T_Link_copied_to_clipboard = `Copied link to clipboard!`;
+      window.T_Reset_view = `Reset view`;
+      window.T_View_reset = `View reset!`;
+      window.T_No_results_found = `No results found for "{0}"`;
+      window.T_N_results_found = `{1} results found for "{0}"`;
+      // variant stuff
+      window.relearn.themevariants = [ 'auto' ];
+      window.relearn.customvariantname = "my-custom-variant";
+      window.relearn.changeVariant = function(variant) {
+        var oldVariant = document.documentElement.dataset.rThemeVariant;
+        window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        document.documentElement.dataset.rThemeVariant = variant;
+        if (oldVariant != variant) {
+          document.dispatchEvent( new CustomEvent('themeVariantLoaded', { detail: { variant, oldVariant } }) );
+          window.relearn.markVariant();
+        }
+      }
+      window.relearn.markVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant");
+        document.querySelectorAll(".R-variantswitcher select").forEach((select) => {select.value = variant;});
+      }
+      window.relearn.initVariant = function() {
+        var variant = window.relearn.getItem(window.localStorage, window.relearn.absBaseUri + "/variant") ?? "";
+        if( variant == window.relearn.customvariantname ){
+        }else if( !variant || !window.relearn.themevariants.includes(variant) ){
+          variant = window.relearn.themevariants[0];
+          window.relearn.setItem(window.localStorage, window.relearn.absBaseUri + "/variant", variant);
+        }
+        document.documentElement.dataset.rThemeVariant = variant;
+      }
+      window.relearn.initVariant();
+      window.relearn.markVariant();
+    </script>
+  </head>
+  <body class="mobile-support html" data-url="/blog/defender/001.mpregistry/001.mpregistry/index.html">
+    <div id="R-body" class="default-animation">
+      <div id="R-body-overlay"></div>
+      <nav id="R-topbar">
+        <div class="topbar-wrapper">
+          <div class="topbar-sidebar-divider"></div>
+          <div class="topbar-area topbar-area-start" data-area="start">
+            <div class="topbar-button topbar-button-sidebar" data-content-empty="disable" data-width-s="show" data-width-m="hide" data-width-l="hide"><button class="topbar-control" onclick="toggleNav()" type="button" title="Menu (CTRL&#43;ALT&#43;n)"><i class="fa-fw fas fa-bars"></i></button>
+            </div>
+            <div class="topbar-button topbar-button-toc" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="Table of Contents (CTRL&#43;ALT&#43;t)"><i class="fa-fw fas fa-list-alt"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+<nav class="TableOfContents">
+  <ul>
+    <li><a href="#has-the-defender-policy-reached-the-device">Has the Defender Policy Reached the Device?</a></li>
+    <li><a href="#defender-mpregistry-logs">Defender MpRegistry Logs</a></li>
+  </ul>
+</nav>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ol class="topbar-breadcrumbs breadcrumbs highlightable" itemscope itemtype="http://schema.org/BreadcrumbList"><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class="a11y-only"><a itemprop="item" href="/index.html"><span itemprop="name">Welcome</span></a><meta itemprop="position" content="1">&nbsp;>>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/blog/index.html"><span itemprop="name">Blog Post</span></a><meta itemprop="position" content="2">&nbsp;>>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><a itemprop="item" href="/blog/defender/index.html"><span itemprop="name">MS Defender</span></a><meta itemprop="position" content="3">&nbsp;>>&nbsp;</li><li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement" class=""><span itemprop="name">Tracking Defender Policy Deployment with Logs</span><meta itemprop="position" content="4"></li>
+          </ol>
+          <div class="topbar-area topbar-area-end" data-area="end">
+            <div class="topbar-button topbar-button-prev" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/blog/defender/index.html" title="Microsoft Defender (🡐)"><i class="fa-fw fas fa-chevron-left"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-next" data-content-empty="disable" data-width-s="show" data-width-m="show" data-width-l="show"><a class="topbar-control" href="/blog/labs/index.html" title="My Lab (🡒)"><i class="fa-fw fas fa-chevron-right"></i></a>
+            </div>
+            <div class="topbar-button topbar-button-more" data-content-empty="hide" data-width-s="show" data-width-m="show" data-width-l="show"><button class="topbar-control" onclick="toggleTopbarFlyout(this)" type="button" title="More"><i class="fa-fw fas fa-ellipsis-v"></i></button>
+              <div class="topbar-content">
+                <div class="topbar-content-wrapper">
+                  <div class="topbar-area topbar-area-more" data-area="more">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div id="R-main-overlay"></div>
+      <main id="R-body-inner" class="highlightable blog" tabindex="-1">
+        <div class="flex-block-wrapper">
+<article class="default">
+  <header class="headline">
+<div class="R-taxonomy taxonomy-tags cstyle tags" title="Tags" style="--VARIABLE-TAGS-BG-color: var(--INTERNAL-TAG-BG-color);">
+  <ul>
+    <li><a class="term-link" href="/tags/defender/index.html">Defender</a></li>
+    <li><a class="term-link" href="/tags/mpregistry/index.html">Mpregistry</a></li>
+    <li><a class="term-link" href="/tags/troubleshooting/index.html">Troubleshooting</a></li>
+  </ul>
+</div>
+  </header>
+
+<h1 id="tracking-defender-policy-deployment-with-logs">Tracking Defender Policy Deployment with Logs</h1>
+
+<p>Have you ever set up Defender policies from GPO or Intune, and wondered whether the policies is indeed applied or not? Or maybe you are using MDE, and is seeing Security Recommendation to Enable Defender ASR Rules, you have applied it through GPO/Intune, but the Recommendation won&rsquo;t go away?</p>
+<p>This guide will be focused at explaining Defender logs called <em>MpRegistry.txt</em>, that will show you how Defender is receiving the policy, and applied policy. This guiide will help you troubleshoot the following scenarios:</p>
+<ol>
+<li>You have applied Defender Policy (such as Real Time Protection, Cloud Protection, or ASR Rules), but unsure if the device received the policy or not.</li>
+<li>You have applied Defender Policy , but it is not being enabled/disabled per your config.</li>
+<li>You try to enable/disable Defender policy, but it says config is locked by administrator.</li>
+<li>You have applied Defender Policy, but MDE Security Recommendation is still there and won&rsquo;t go away.</li>
+</ol>
+<h2 id="has-the-defender-policy-reached-the-device">Has the Defender Policy Reached the Device?</h2>
+<p>First step of a policy to be applied is that, it need to be arrived on the Device. Before Defender receive and apply it.</p>
+<blockquote>
+<p>Management Tools &gt; Device/Endpoint &gt; Defender</p></blockquote>
+<p>Next, we can reverse the flow to check the logs to see if configuration is applied/arrived at each points.</p>
+<blockquote>
+<p>Defender (MpRegistry.txt) &gt; Device/Endpoint (GPResult/MDM Logs/etc) &gt; Management Tools (Respective tools logs)</p></blockquote>
+<h2 id="defender-mpregistry-logs">Defender MpRegistry Logs</h2>
+<p>You can collect Defender logs using the following command:</p>
+<div class="highlight wrap-code" dir="auto"><pre tabindex="0"><code>&#34;%programfiles%\Windows Defender\mpcmdrun.exe&#34; -getfiles</code></pre></div>
+<p><a href="#R-image-167553d4fdf3c520753dfe725aaadbde" class="lightbox-link"><img alt="Test" class="lazy lightbox figure-image" loading="lazy" src="mpsupportfiles.png" style=" height: auto; width: auto;"></a>
+<a href="javascript:history.back();" class="lightbox-back" id="R-image-167553d4fdf3c520753dfe725aaadbde"><img alt="Test" class="lazy lightbox lightbox-image" loading="lazy" src="mpsupportfiles.png"></a>
+Once collection finish, extract the cab file to find the <em>MpRegistry.txt</em></p>
+
+  <footer class="footline">
+  </footer>
+</article>
+        </div>
+      </main>
+    </div>
+    <aside id="R-sidebar" class="default-animation">
+      <div id="R-header-topbar" class="default-animation"></div>
+      <div id="R-header-wrapper" class="default-animation">
+        <div id="R-header" class="default-animation">
+          <a id="R-logo" class="R-default" href="/index.html">
+            <div class="logo-title">Novian Andrian</div>
+          </a>
+        </div>
+        <search><form action="/search/index.html" method="get">
+          <div class="searchbox default-animation">
+            <button class="search-detail" type="submit" title="Search (CTRL+ALT+f)"><i class="fas fa-search"></i></button>
+            <label class="a11y-only" for="R-search-by">Search</label>
+            <input data-search-input id="R-search-by" name="search-by" class="search-by" type="search" placeholder="Search...">
+            <button class="search-clear" type="button" data-search-clear="" title="Clear search"><i class="fas fa-times" title="Clear search"></i></button>
+          </div>
+        </form></search>
+      </div>
+      <div id="R-homelinks" class="default-animation">
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-homelinks">
+          <ul class="space collapsible-menu">
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-headercontrols">
+          <ul class="">
+          </ul>
+        </div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+      </div>
+      <div id="R-content-wrapper" class="highlightable">
+        <div class="R-sidebarmenu R-shortcutmenu-main">
+          <ul class="enlarge morespace collapsible-menu">
+            <li class="" data-nav-id="/about/index.html"><a class="padding" href="/about/index.html">. <i class="fa-solid fa-user"></i> About Me</a></li>
+            <li class="" data-nav-id="/credentials/index.html"><a class="padding" href="/credentials/index.html">. <i class="fa-solid fa-file-contract"></i> Credentials</a></li>
+            <li class="" data-nav-id="/contact/index.html"><a class="padding" href="/contact/index.html">. <i class="fa-solid fa-phone"></i> Contact</a></li>
+            <li class="parent alwaysopen " data-nav-id="/blog/index.html"><input type="checkbox" id="R-section-c061e150208a7ab43c1b0b723b79816b" aria-controls="R-subsections-c061e150208a7ab43c1b0b723b79816b" checked><label for="R-section-c061e150208a7ab43c1b0b723b79816b"><i class="fa-fw fas fa-chevron-right"></i><span class="a11y-only">Submenu Blog Post</span></label><a class="padding" href="/blog/index.html">. <i class="fa-solid fa-blog"></i> Blog Post</a><ul id="R-subsections-c061e150208a7ab43c1b0b723b79816b" class="collapsible-menu">
+            <li class="parent " data-nav-id="/blog/defender/index.html"><input type="checkbox" id="R-section-33dd05e5edb8d61a663c9a1412e8164e" aria-controls="R-subsections-33dd05e5edb8d61a663c9a1412e8164e" checked><label for="R-section-33dd05e5edb8d61a663c9a1412e8164e"><i class="fa-fw fas fa-chevron-right"></i><span class="a11y-only">Submenu MS Defender</span></label><a class="padding" href="/blog/defender/index.html"><i class="fa-sharp-duotone fa-solid fa-shield"></i> MS Defender</a><ul id="R-subsections-33dd05e5edb8d61a663c9a1412e8164e" class="collapsible-menu">
+            <li class="active " data-nav-id="/blog/defender/001.mpregistry/001.mpregistry/index.html"><a class="padding" href="/blog/defender/001.mpregistry/001.mpregistry/index.html">Tracking Defender Policy Deployment with Logs</a></li></ul></li>
+            <li class="" data-nav-id="/blog/labs/index.html"><a class="padding" href="/blog/labs/index.html"><i class="fas fa-user"></i> Lab Post</a></li></ul></li>
+          </ul>
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-shortcuts">
+          <ul class="space collapsible-menu">
+          </ul>
+        </div>
+        <div id="R-footer-margin"></div>
+        <div class="R-menu-divider default-animation">
+          <hr class="padding">
+        </div>
+        <div class="R-sidebarmenu R-shortcutmenu-footercontrols">
+          <ul class="">
+          </ul>
+        </div>
+<div id="R-footer"><p>Built with <a href="https://github.com/McShelby/hugo-theme-relearn" title="love"><i class="fas fa-heart"></i></a> by <a href="https://gohugo.io/">Hugo</a></p></div>
+      </div>
+    </aside>
+    <script src="/js/clipboard/clipboard.min.js?1753722710" defer></script>
+    <script src="/js/perfect-scrollbar/perfect-scrollbar.min.js?1753722710" defer></script>
+    <script src="/js/theme.js?1753722710" defer></script>
+  </body>
+</html>
