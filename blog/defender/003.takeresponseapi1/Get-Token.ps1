@@ -1,9 +1,10 @@
 # That code gets the App Context Token and save it to a file named "Latest-token.txt" under the current directory
 # Paste below your Tenant ID, App ID and App Secret (App key).
 
-$tenantId = 'REPLACE_THIS'# Do not put secrets in version-controlled code
-$appId = 'REPLACE_THIS' # Do not put secrets in version-controlled code
-$appSecret = 'REPLACE_THIS' # Do not put secrets in version-controlled code
+#add your secret here
+$tenantId = 'replace with your id'
+$appId = 'replace with your id'
+$appSecret = 'replace with your id'
 
 $resourceAppIdUri = 'https://api.securitycenter.microsoft.com'
 $oAuthUri = "https://login.microsoftonline.com/$TenantId/oauth2/token"
