@@ -1237,10 +1237,10 @@ kbd {
 
 h1 {
   color: var(--INTERNAL-MAIN-TITLES-H1-TEXT-color);
-  font-size: 2.8rem;
-  font-variation-settings: var(--INTERNAL-MAIN-TITLES-H1-font-variation-settings);
-  font-weight: var(--INTERNAL-MAIN-TITLES-H1-font-weight);
-  font-family: var(--INTERNAL-MAIN-TITLES-H1-font);
+  font-size: 2.5rem;
+  /* font-variation-settings: var(--INTERNAL-MAIN-TITLES-H1-font-variation-settings); */
+  /* font-weight: var(--INTERNAL-MAIN-TITLES-H1-font-weight); */
+  /* font-family: var(--INTERNAL-MAIN-TITLES-H1-font); */
   hyphens: auto;
   letter-spacing: var(--INTERNAL-MAIN-TITLES-H1-letter-spacing);
   margin: 0.85rem 0 1rem 0;
